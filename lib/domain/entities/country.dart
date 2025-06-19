@@ -5,6 +5,7 @@ class Country extends Equatable {
   final int population;
   final String flag;
   final Map<String, String>? flags;
+  final Map<String, Map<String, String>>? nativeName;
   final int? area;
   final String? region;
   final String? subregion;
@@ -16,6 +17,7 @@ class Country extends Equatable {
     required this.population,
     required this.flag,
     this.flags,
+    this.nativeName,
     this.area,
     this.region,
     this.subregion,
@@ -24,5 +26,5 @@ class Country extends Equatable {
   });
 
   @override
-  List<Object?> get props => [name, population, flag, flags, area, region, subregion, timezones, isFavorite];
+  List<Object?> get props => [name, population, flag, flags, nativeName, area, region, subregion, timezones, isFavorite];
 }

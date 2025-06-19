@@ -6,6 +6,7 @@ class CountryModel extends Country {
     required int population,
     required String flag,
     Map<String, String>? flags,
+    Map<String, Map<String, String>>? nativeName,
     int? area,
     String? region,
     String? subregion,
@@ -16,6 +17,7 @@ class CountryModel extends Country {
           population: population,
           flag: flag,
           flags: flags,
+          nativeName: nativeName,
           area: area,
           region: region,
           subregion: subregion,
@@ -35,11 +37,10 @@ class CountryModel extends Country {
               'alt': json['flags']['alt'] as String,
             }
           : null,
-      area: json['area'] != null
-          ? (json['area'] is int
-              ? json['area'] as int
-              : (json['area'] as double).toInt())
+      nativeName: json['name']['nativeName'] != null
+          ? {for (var entry in (json['name']['nativeName'] as Map).entries) entry.key: {'official': entry.value['official'] as String, 'common': entry.value['common'] as String}}
           : null,
+      area: (json['area'] as num?)?.toInt(),
       region: json['region'] as String?,
       subregion: json['subregion'] as String?,
       timezones: (json['timezones'] as List<dynamic>?)?.cast<String>(),
@@ -48,7 +49,7 @@ class CountryModel extends Country {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': {'common': name},
+      'name': {'common': name, 'nativeName': nativeName},
       'population': population,
       'flag': flag,
       'flags': flags,
