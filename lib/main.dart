@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<CountryBloc>(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Country App',
         theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/',

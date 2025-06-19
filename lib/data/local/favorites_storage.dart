@@ -6,6 +6,7 @@ class FavoritesStorage {
   static Future<void> saveFavorites(List<CountryModel> countries) async {
     final prefs = await SharedPreferences.getInstance();
     final favoriteNames = countries.where((c) => c.isFavorite).map((c) => c.name).toList();
+    print('Saving favorites: $favoriteNames'); // Debug
     await prefs.setStringList(favoritesKey, favoriteNames);
   }
 

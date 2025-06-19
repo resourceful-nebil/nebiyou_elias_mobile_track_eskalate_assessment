@@ -1,16 +1,19 @@
 import 'package:assessment/domain/entities/country.dart';
+import 'package:assessment/domain/repositories/country_repository.dart';
 import 'package:assessment/domain/usecases/fetch_countries.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'country_event.dart';
 import 'country_state.dart';
+import '../../data/repository/country_repository_impl.dart';
 
 @injectable
 class CountryBloc extends Bloc<CountryEvent, CountryState> {
   final FetchCountries _fetchCountries;
+  final CountryRepository _repository; // Changed to interface type
 
-  CountryBloc(this._fetchCountries) : super(CountryInitial()) {
+  CountryBloc(this._fetchCountries, @factoryParam this._repository) : super(CountryInitial()) {
     on<LoadCountries>(_onLoadCountries);
     on<SearchCountries>(_onSearchCountries);
     on<ToggleFavorite>(_onToggleFavorite);
@@ -46,6 +49,7 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
                 name: country.name,
                 population: country.population,
                 flag: country.flag,
+                flags: country.flags,
                 area: country.area,
                 region: country.region,
                 subregion: country.subregion,
@@ -54,7 +58,7 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
               )
             : country;
       }).toList();
-      await _saveFavorites(updatedCountries);
+      await (_repository as CountryRepositoryImpl).saveFavorites(updatedCountries); // Cast to access implementation
       emit(CountryLoaded(updatedCountries));
     }
   }
@@ -67,10 +71,5 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
     } catch (e) {
       emit(CountryError(e.toString()));
     }
-  }
-
-  Future<void> _saveFavorites(List<Country> countries) async {
-    // This would typically be handled by a use case, but for simplicity, we'll call it here
-    // In a real app, inject a SaveFavorites use case
   }
 }

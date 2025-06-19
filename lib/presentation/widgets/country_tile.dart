@@ -14,8 +14,19 @@ class CountryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = country.flags?['png'] ?? 'https://via.placeholder.com/50x30'; // Fallback placeholder
+    print('Loading image from: $imageUrl'); // Debug log
     return ListTile(
-      leading: Image.network(country.flags?['png'] ?? country.flag, width: 50, height: 30, fit: BoxFit.cover),
+      leading: Image.network(
+        imageUrl,
+        width: 50,
+        height: 30,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Image load error for $imageUrl: $error'); // Log error
+          return Icon(Icons.error, color: Colors.red); // Show error icon
+        },
+      ),
       title: Text(country.name),
       subtitle: Text('Pop: ${utils.formatPopulation(country.population)}'),
       trailing: IconButton(

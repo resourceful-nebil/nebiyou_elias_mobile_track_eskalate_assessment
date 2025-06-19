@@ -27,6 +27,7 @@ Future<void> init() async {
 
   // Blocs
   sl.registerFactory(() => CountryBloc(
-        sl(),
+        sl<FetchCountries>(), // First argument: FetchCountries
+        sl<CountryRepository>(), // Second argument: Use the interface
       ));
 }

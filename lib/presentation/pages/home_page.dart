@@ -8,14 +8,18 @@ import '../bloc/country_state.dart';
 import '../widgets/country_tile.dart';
 
 class HomePage extends StatelessWidget {
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: sl<CountryBloc>()..add(LoadCountries()),
       child: Scaffold(
-        appBar: AppBar(title: Text('Countries')),
+        appBar: AppBar(
+          title: Text('Countries'),
+          centerTitle: true,
+        ),
         body: BlocBuilder<CountryBloc, CountryState>(
           builder: (context, state) {
             if (state is CountryLoading) {
@@ -27,13 +31,16 @@ class HomePage extends StatelessWidget {
             if (state is CountryLoaded) {
               return SmartRefresher(
                 controller: _refreshController,
-                onRefresh: () => context.read<CountryBloc>().add(RefreshCountries()),
+                onRefresh: () =>
+                    context.read<CountryBloc>().add(RefreshCountries()),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        onChanged: (query) => context.read<CountryBloc>().add(SearchCountries(query)),
+                        onChanged: (query) => context
+                            .read<CountryBloc>()
+                            .add(SearchCountries(query)),
                         decoration: InputDecoration(
                           hintText: 'Search for a country',
                           border: OutlineInputBorder(),
@@ -46,7 +53,8 @@ class HomePage extends StatelessWidget {
                           ? Center(child: Text('No countries found'))
                           : ListView.builder(
                               itemCount: state.countries.length,
-                              itemBuilder: (context, index) => CountryTile(country: state.countries[index]),
+                              itemBuilder: (context, index) =>
+                                  CountryTile(country: state.countries[index]),
                             ),
                     ),
                   ],
@@ -59,7 +67,8 @@ class HomePage extends StatelessWidget {
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.favorite), label: 'Favorites'),
           ],
           onTap: (index) {
             if (index == 1) Navigator.pushNamed(context, '/favorites');
